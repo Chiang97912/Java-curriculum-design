@@ -10,6 +10,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 
 import javax.swing.ImageIcon;
@@ -23,7 +29,7 @@ public class MainFrame extends JFrame {
 	int ROWS = 10;
 	int COLS = 10;
 	JPanel l1,l2,l3,p1,p2;
-	JLabel levelLabel,goalLabel,scoreLabel;
+	JLabel levelLabel,goalLabel,scoreLabel,passLabel;
 	JButton stopButton;
 	JButton buttons[] = new JButton[ROWS*COLS];
 	int imageTag[];
@@ -61,6 +67,17 @@ public class MainFrame extends JFrame {
 		tipLabel = new JLabel();
 		tipLabel.setBounds(165,0,200,30);
 		tipLabel.setFont(new Font("",0,20));
+		
+		passLabel = new JLabel();
+		passLabel.setBounds(350,0,80,30);
+		passLabel.setHorizontalAlignment(JLabel.CENTER);
+		passLabel.setVerticalAlignment(JLabel.CENTER);
+		ImageIcon icon = new ImageIcon("icons/stage_clear.png");
+		Image temp = icon.getImage().getScaledInstance(passLabel.getWidth(),passLabel.getHeight(),icon.getImage().SCALE_DEFAULT);
+		icon = new ImageIcon(temp);
+		passLabel.setIcon(icon);
+		passLabel.setVisible(false);
+		
 		stopButton.setSize(35,35);
 		stopButton.setBorderPainted(false);
 		stopButton.setContentAreaFilled(false);
@@ -83,6 +100,7 @@ public class MainFrame extends JFrame {
 		stopButton.setLocation(20,0);
 		
 		l3.add(tipLabel);
+		l3.add(passLabel);
 		p1.add(l1);
 		p1.add(l2);
 		p1.add(l3);
@@ -134,6 +152,42 @@ public class MainFrame extends JFrame {
 			}else {
 				this.fail();
 			}
+		
+			//write the highest score into the file
+			File file = new File("classic-mode-highest-score.log");
+			if(!file.exists()) {
+				try {
+					file.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			int highestScore = 0;
+			try {
+				FileInputStream fis = new FileInputStream("classic-mode-highest-score.log");
+				ObjectInputStream ois = new ObjectInputStream(fis);
+				highestScore = ((Integer)ois.readObject()).intValue();
+				ois.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			if(score>highestScore) {
+				try {
+					FileOutputStream fos = new FileOutputStream("classic-mode-highest-score.log");
+					ObjectOutputStream oos = new ObjectOutputStream(fos);
+					oos.writeObject(new Integer(score));
+					oos.close();
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (IOException e2) {
+					e2.printStackTrace();
+				}
+			}
+			passLabel.setVisible(false);
 		}
 	}
 	
@@ -187,6 +241,13 @@ public class MainFrame extends JFrame {
 			icon = new ImageIcon(temp);
 			label.setIcon(icon);
 			this.getLayeredPane().add(label,new Integer(Integer.MAX_VALUE)); //将通关提示消息放到MainFrame的最上层
+			File file = new File("sounds/applause.wav");
+			try {
+				AudioClip sound = Applet.newAudioClip(file.toURL());
+				sound.play();
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
 			new Thread(new SuspendPass(this)).start();
 		}
 		
@@ -199,6 +260,7 @@ public class MainFrame extends JFrame {
 		public void suspendMethod() {
 			label.setIcon(null);
 			MainFrame.this.remove(label);
+			passLabel.setVisible(true);
 		}
 	}
 	

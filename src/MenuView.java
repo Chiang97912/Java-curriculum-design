@@ -2,6 +2,7 @@ import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -24,7 +25,7 @@ import javax.swing.event.MouseInputListener;
 public class MenuView extends JFrame{
 	private JButton playButton;
 	private JButton continueButton;
-	private JButton difficulty;
+	private JButton timeModeButton;
 	private JButton helpButton;
 	private JButton exitButton;
 	private JLabel label;
@@ -38,6 +39,7 @@ public class MenuView extends JFrame{
 	AudioClip sound;
 	MenuView() {
 		label = new JLabel();
+		
 		loadImage();
 		loadButton();
 		this.setSize(width,height);
@@ -48,6 +50,9 @@ public class MenuView extends JFrame{
 		this.addMouseMotionListener(new MouseEventListener(this));
 		this.addMouseListener(new MouseEventListener(this));
 		
+		HighestScoreLabel hsl = new HighestScoreLabel(width);
+		new Thread(hsl).start();
+		label.add(hsl);
 		File file = new File("sounds/background.wav");
 		try {
 			sound = Applet.newAudioClip(file.toURL());
@@ -71,21 +76,18 @@ public class MenuView extends JFrame{
 	     }
 	     
 	     @Override
-	     public void mouseClicked(MouseEvent e) {}
+	     public void mouseClicked(MouseEvent e) {
+	    	 
+	     }
 	     
 	     @Override
-	     public void mousePressed(MouseEvent e) {
-	       origin.x = e.getX(); 
-	       origin.y = e.getY();
-	     }
+	     public void mousePressed(MouseEvent e) {}
 	 
 	     @Override
 	     public void mouseReleased(MouseEvent e) {}
 	
 	     @Override
-	     public void mouseEntered(MouseEvent e) {
-	       //this.frame.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-	     }
+	     public void mouseEntered(MouseEvent e) {}
 	     
 	
 	     @Override
@@ -110,9 +112,10 @@ public class MenuView extends JFrame{
 	 
 	private void loadButton() {
 		playButton = new JButton();
-		playButton.setBounds(50,50,100,30);
+		playButton.setBounds(150,150,100,30);
 		playButton.setBackground(new Color(251,216,96));
-		playButton.setText("开始");
+		playButton.setText("新游戏");
+		playButton.setFont(new Font("",Font.PLAIN,16));
 		playButton.setBorderPainted(false);
 		playButton.setFocusable(false);
 		playButton.addActionListener(new ActionListener(){
@@ -145,10 +148,11 @@ public class MenuView extends JFrame{
 		});
 		continueButton = new JButton();
 		continueButton.setText("继续");
+		continueButton.setFont(new Font("",Font.PLAIN,16));
 		continueButton.setBorderPainted(false);
 		continueButton.setFocusable(false);
 		continueButton.setBackground(new Color(251,216,96));
-		continueButton.setBounds(50,100,100,30);
+		continueButton.setBounds(150,200,100,30);
 		continueButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -178,10 +182,32 @@ public class MenuView extends JFrame{
 			}
 			
 		});
-		helpButton = new JButton();
-		helpButton.setBounds(50,150,100,30);
+		
+		/*File f = new File("game.log");
+		if(f.length()==0) {
+			continueButton.setEnabled(false);
+		}*/
+		timeModeButton = new JButton("限时模式");
+		timeModeButton.setFont(new Font("",Font.PLAIN,16));
+		timeModeButton.setBounds(150,250,100,30);
+		timeModeButton.setBackground(new Color(251,216,96));
+		timeModeButton.setBorderPainted(false);
+		timeModeButton.setFocusable(false);
+		timeModeButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new TimeModeMainFrame(MenuView.this);
+				mv.setVisible(false);
+				mv.sound.stop();
+			}
+			
+		});
+		
+		helpButton = new JButton("游戏帮助");
+		helpButton.setFont(new Font("",Font.PLAIN,16));
+		helpButton.setBounds(150,300,100,30);
 		helpButton.setBackground(new Color(251,216,96));
-		helpButton.setText("帮助");
 		helpButton.setBorderPainted(false);
 		helpButton.setFocusable(false);
 		helpButton.addActionListener(new ActionListener() {
@@ -193,10 +219,10 @@ public class MenuView extends JFrame{
 			}
 			
 		});
-		exitButton = new JButton();
-		exitButton.setBounds(50,200,100,30);
+		exitButton = new JButton("退出游戏");
+		exitButton.setFont(new Font("",Font.PLAIN,16));
+		exitButton.setBounds(150,350,100,30);
 		exitButton.setBackground(new Color(251,216,96));
-		exitButton.setText("退出");
 		exitButton.setBorderPainted(false);
 		exitButton.setFocusable(false);
 		exitButton.addActionListener(new ActionListener() {
@@ -209,6 +235,7 @@ public class MenuView extends JFrame{
 		});
 		label.add(playButton);
 		label.add(continueButton);
+		label.add(timeModeButton);
 		label.add(helpButton);
 		label.add(exitButton);
 		
