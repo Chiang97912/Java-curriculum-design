@@ -77,7 +77,7 @@ public class MainFrame extends JFrame {
 	 * 游戏主界面的初始化函数
 	 */
 	public void init() {
-		FontClass fontClass = new FontClass("fonts/STCAIYUN.TTF",22f);
+		FontClass fontClass = new FontClass("fonts/STCAIYUN.TTF",28f);
 		Font font = fontClass.loadFont();
 		this.setSize(460,680); //600 680
 		this.setLocationRelativeTo(null);
@@ -151,7 +151,7 @@ public class MainFrame extends JFrame {
 		this.add(p1);
 		this.add(p2);
 		this.setLayout(null);
-		p1.setSize(this.getWidth(),100);
+		p1.setSize(this.getWidth(),150);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 		this.setResizable(false);
@@ -203,17 +203,19 @@ public class MainFrame extends JFrame {
 				}
 			}
 			int highestScore = 0;
-			try {
-				FileInputStream fis = new FileInputStream("classic-mode-highest-score.log");
-				ObjectInputStream ois = new ObjectInputStream(fis);
-				highestScore = ((Integer)ois.readObject()).intValue();
-				ois.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+			if(file.length()>0) {
+				try {
+					FileInputStream fis = new FileInputStream("classic-mode-highest-score.log");
+					ObjectInputStream ois = new ObjectInputStream(fis);
+					highestScore = ((Integer)ois.readObject()).intValue();
+					ois.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
 			}
 			if(score>highestScore) {
 				try {
