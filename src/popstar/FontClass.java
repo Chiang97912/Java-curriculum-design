@@ -29,10 +29,10 @@ public class FontClass {
 	public Font loadFont() {
 		Font customFont = null;
 		try {
-		    //create the font to use. Specify the size!
+		    //create×ÖÌå
 		    customFont = Font.createFont(Font.TRUETYPE_FONT, new File(fontFilePath)).deriveFont(fontSize);
 		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		    //register the font
+		    //×¢²á×ÖÌå
 		    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(fontFilePath)));
 		} catch (IOException e) {
 		    e.printStackTrace();

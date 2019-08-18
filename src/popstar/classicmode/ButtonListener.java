@@ -82,7 +82,7 @@ public class ButtonListener implements ActionListener {
 		fillVGap();
 		fillHGap();
 	}
-	/** 填充横向的空白按钮 */
+	/** 填充纵向的空白按钮 */
 	public void fillVGap() {
 		for(int i=ROWS-1;i>0;i--) {
 			for(int j=COLS-1;j>=0;j--) {
@@ -99,7 +99,7 @@ public class ButtonListener implements ActionListener {
 			}
 		}
 	}
-	/** 填充纵向的空白按钮 */
+	/** 填充横向的空白按钮 */
 	public void fillHGap() {
 		for(int j=0;j<COLS;j++) {
 			if(isAllColumnHidden(j)&&j<COLS-1) {

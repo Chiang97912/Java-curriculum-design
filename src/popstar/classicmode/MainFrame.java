@@ -560,7 +560,7 @@ public class MainFrame extends JFrame {
 		if(popedNum>1) {
 			int delta = popedNum*popedNum*5;
 			this.tipLabel.setText(this.popedNum+"Á¬Ïû "+delta);
-			new Thread(new SuspendTipLabel(this)).start();
+			//new Thread(new SuspendTipLabel(this)).start();
 			
 			if(popedNum>=6) {
 				File file = new File("sounds/good.wav");
